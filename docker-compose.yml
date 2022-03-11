@@ -1,0 +1,33 @@
+---
+version: "3"
+services:
+  db:
+    image: postgres:14
+    container_name: botify-db
+    restart: unless-stopped
+    environment:
+      - TZ="${TIME_ZONE}"
+      - POSTGRES_USER="${PG_USER}"
+      - POSTGRES_PASSWORD="${PG_PASS}"
+    volumes:
+      - ./config:/config
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+
+  app:
+    image: botify:latest
+    container_name: bot-app
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: ./Docker/Dockerfile
+    ports:
+      - 8000:8000
+
+# Optional - use an external network
+# Replace `networkNameHere` with whatever your heart desires
+# networks:
+#     default:
+#        external:
+#          name: networkNameHere
